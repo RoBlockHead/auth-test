@@ -20,15 +20,17 @@ export const checkUser = async (username: string, password: string, callback: Fu
         let passHash: string;
         usersDB.get(`SELECT DISTINCT * FROM users WHERE username = '${username}'`, (err: Error, row: any) => {
             if (err) {
+                callback(false);
                 return console.error(err);
             }
             else if(!row){
+                callback(false);
                 return false;
             }
             bcrypt.compare(password, row.password, (err: Error, same: boolean) => {
                 if (err) {
                     // console.log(typeof(password));
-                    console.log(passHash);
+                    callback(false);
                     return console.error(err);
                 }
                 callback(same);
